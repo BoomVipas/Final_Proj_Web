@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1024" />
+  <title>MedCare — เลือกผู้ป่วย</title>
+  <link rel="stylesheet" href="./base.css" />
+  <style>
+    /* ── 4-column grid ──────────────────────────────────────────────────── */
+    .patient-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px 27px;
+      padding-top: 8px;
+    }
+
+    /* ── Patient card — Figma 03_Patients ───────────────────────────────── */
+    .patient-card {
+      width: 220px;
+      height: 220px;
+      background: var(--bg-surface);
+      border: 0.8px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+      flex-shrink: 0;
+    }
+
+    .patient-card:hover { border-color: var(--color-primary); box-shadow: 0 4px 14px rgba(242,166,90,0.18); }
+    .patient-card:active { transform: scale(0.98); }
+
+    /* Filled card — greyed out overlay */
+    .patient-card.is-filled { cursor: default; }
+    .patient-card.is-filled::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(217,217,217,0.40);
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .patient-card.is-filled:hover { border-color: var(--border-color); box-shadow: none; }
+    .patient-card.is-filled:active { transform: none; }
+
+    /* Card content — positioned inside */
+    .pc-inner {
+      position: absolute;
+      inset: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 1;
+    }
+
+    /* Room tag row: tag left, optional check right */
+    .pc-top-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .pc-room-tag {
+      background: var(--bg-surface);
+      border: 0.63px solid #E6E6E6;
+      border-radius: 5px;
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 400;
+      color: #1a1a1a;
+      white-space: nowrap;
+      line-height: 1.2;
+    }
+
+    .pc-check-circle {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .pc-check-circle svg { width: 24px; height: 24px; }
+
+    /* Patient name — 16px bold orange, 2 lines */
+    .pc-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-primary);
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    /* Divider */
+    .pc-divider { height: 0.8px; background: var(--border-color); }
+
+    /* Stats */
+    .pc-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .pc-stat {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-primary);
+    }
+
+    .pc-stat svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .pc-stat.alert { color: #EB7575; }
+
+    /* Fill / Filled button — absolute at card bottom */
+    .pc-btn-wrap {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      z-index: 1;
+    }
+
+    .pc-btn {
+      width: 100%;
+      height: 30px;
+      border-radius: var(--radius-pill);
+      border: none;
+      font-size: 14px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .pc-btn.fill   { background: var(--color-primary); color: #fff; }
+    .pc-btn.fill:hover { background: var(--color-primary-dark); }
+    .pc-btn.filled { background: #E6E6E6; color: #fff; cursor: default; }
+  </style>
+</head>
+<body>
+  <div class="touch-shell">
+
+    <!-- Header -->
+    <header class="touch-header">
+      <div class="header-left">
+        <button class="header-back" onclick="window.location.href='ward.html'" aria-label="กลับ">
+          <span class="header-back-icon">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 15L7 10l5-5"/>
+            </svg>
+          </span>
+          <span id="ward-label">Ward A</span>
+        </button>
+      </div>
+
+      <div class="header-logo">
+        <svg class="logo-bubble-svg" viewBox="0 0 28 24" fill="none" aria-hidden="true">
+          <path d="M3 0h22a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H14l-5 5v-5H3a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3z" fill="#F2A65A"/>
+        </svg>
+        <span class="logo-wordmark">illo</span>
+      </div>
+
+      <div class="header-actions">
+        <button class="header-icon-btn" aria-label="หน้าหลัก" onclick="window.location.href='index.html'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+            <path d="M9 21V12h6v9"/>
+          </svg>
+        </button>
+        <button class="header-icon-btn" aria-label="ผู้ใช้">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </button>
+        <button class="header-icon-btn" aria-label="ตั้งค่า">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main: Patient grid -->
+    <main class="touch-main">
+      <div class="patient-grid">
+
+        <!--
+          Patient card structure (square 220×220):
+          - room tag (A-101) top-left + check circle (filled only) top-right
+          - patient name in orange (two lines)
+          - divider
+          - med type count + low stock
+          - Fill / Filled button at absolute bottom
+        -->
+
+        <!-- Patient 1 — Filled → grey overlay + check circle + Filled btn -->
+        <div class="patient-card is-filled" onclick="">
+          <div class="pc-inner">
+            <div class="pc-top-row">
+              <span class="pc-room-tag">A - 101</span>
+              <div class="pc-check-circle">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" fill="#4CAF97" opacity="0.9"/>
+                  <polyline points="7,12 10.5,15.5 17,8.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <p class="pc-name">Somchai<br>Pattaramongkol</p>
+            <div class="pc-divider"></div>
+            <div class="pc-stats">
+              <span class="pc-stat">
+                <svg viewBox="0 0 16 16" fill="currentColor"><ellipse cx="8" cy="8" rx="4.5" ry="2.8" transform="rotate(-35 8 8)"/></svg>
+                8 Types
+              </span>
+              <span class="pc-stat alert">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2L1.5 14h13L8 2z"/><line x1="8" y1="9" x2="8" y2="11"/><circle cx="8" cy="12.5" r="0.5" fill="currentColor"/></svg>
+                1 Low stock
+              </span>
+            </div>
+          </div>
+          <div class="pc-btn-wrap" style="z-index:3">
+            <button class="pc-btn filled" disabled>Filled</button>
+          </div>
+        </div>
+
+        <!-- Patient 2 — Filled -->
+        <div class="patient-card is-filled">
+          <div class="pc-inner">
+            <div class="pc-top-row">
+              <span class="pc-room-tag">A - 102</span>
+              <div class="pc-check-circle">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" fill="#4CAF97" opacity="0.9"/>
+                  <polyline points="7,12 10.5,15.5 17,8.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <p class="pc-name">Wipa<br>Suksant</p>
+            <div class="pc-divider"></div>
+            <div class="pc-stats">
+              <span class="pc-stat">
+                <svg viewBox="0 0 16 16" fill="currentColor"><ellipse cx="8" cy="8" rx="4.5" ry="2.8" transform="rotate(-35 8 8)"/></svg>
+                8 Types
+              </span>
+              <span class="pc-stat alert">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2L1.5 14h13L8 2z"/><line x1="8" y1="9" x2="8" y2="11"/><circle cx="8" cy="12.5" r="0.5" fill="currentColor"/></svg>
+                1 Low stock
+              </span>
+            </div>
+          </div>
+          <div class="pc-btn-wrap" style="z-index:3">
+            <button class="pc-btn filled" disabled>Filled</button>
+          </div>
+        </div>
+
+        <!-- Patient 3 — Pending -->
+        <div class="patient-card" onclick="selectPatient('p3','Somchai Pattaramongkol','A - 103')">
+          <div class="pc-inner">
+            <div class="pc-top-row">
+              <span class="pc-room-tag">A - 103</span>
+            </div>
+            <p class="pc-name">Somchai<br>Pattaramongkol</p>
+            <div class="pc-divider"></div>
+            <div class="pc-stats">
+              <span class="pc-stat">
+                <svg viewBox="0 0 16 16" fill="currentColor"><ellipse cx="8" cy="8" rx="4.5" ry="2.8" transform="rotate(-35 8 8)"/></svg>
+                8 Types
+              </span>
+              <span class="pc-stat alert">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2L1.5 14h13L8 2z"/><line x1="8" y1="9" x2="8" y2="11"/><circle cx="8" cy="12.5" r="0.5" fill="currentColor"/></svg>
+                1 Low stock
+              </span>
+            </div>
+          </div>
+          <div class="pc-btn-wrap">
+            <button class="pc-btn fill" onclick="selectPatient('p3','Somchai Pattaramongkol','A - 103')">Fill</button>
+          </div>
+        </div>
+
+        <!-- Patient 4 — Pending -->
+        <div class="patient-card" onclick="selectPatient('p4','Mali Raksong','A - 102')">
+          <div class="pc-inner">
+            <div class="pc-top-row">
+              <span class="pc-room-tag">A - 102</span>
+            </div>
+            <p class="pc-name">Mali<br>Raksong</p>
+            <div class="pc-divider"></div>
+            <div class="pc-stats">
+              <span class="pc-stat">
+                <svg viewBox="0 0 16 16" fill="currentColor"><ellipse cx="8" cy="8" rx="4.5" ry="2.8" transform="rotate(-35 8 8)"/></svg>
+                8 Types
+              </span>
+              <span class="pc-stat alert">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2L1.5 14h13L8 2z"/><line x1="8" y1="9" x2="8" y2="11"/><circle cx="8" cy="12.5" r="0.5" fill="currentColor"/></svg>
+                1 Low stock
+              </span>
+            </div>
+          </div>
+          <div class="pc-btn-wrap">
+            <button class="pc-btn fill" onclick="selectPatient('p4','Mali Raksong','A - 102')">Fill</button>
+          </div>
+        </div>
+
+        <!-- Patient 5 — Pending -->
+        <div class="patient-card" onclick="selectPatient('p5','Surachai Dangam','A - 102')">
+          <div class="pc-inner">
+            <div class="pc-top-row">
+              <span class="pc-room-tag">A - 102</span>
+            </div>
+            <p class="pc-name">Surachai<br>Dangam</p>
+            <div class="pc-divider"></div>
+            <div class="pc-stats">
+              <span class="pc-stat">
+                <svg viewBox="0 0 16 16" fill="currentColor"><ellipse cx="8" cy="8" rx="4.5" ry="2.8" transform="rotate(-35 8 8)"/></svg>
+                8 Types
+              </span>
+              <span class="pc-stat alert">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2L1.5 14h13L8 2z"/><line x1="8" y1="9" x2="8" y2="11"/><circle cx="8" cy="12.5" r="0.5" fill="currentColor"/></svg>
+                1 Low stock
+              </span>
+            </div>
+          </div>
+          <div class="pc-btn-wrap">
+            <button class="pc-btn fill" onclick="selectPatient('p5','Surachai Dangam','A - 102')">Fill</button>
+          </div>
+        </div>
+
+        <!-- Patient 6 — Pending -->
+        <div class="patient-card" onclick="selectPatient('p6','Arunee Pongthai','A - 102')">
+          <div class="pc-inner">
+            <div class="pc-top-row">
+              <span class="pc-room-tag">A - 102</span>
+            </div>
+            <p class="pc-name">Arunee<br>Pongthai</p>
+            <div class="pc-divider"></div>
+            <div class="pc-stats">
+              <span class="pc-stat">
+                <svg viewBox="0 0 16 16" fill="currentColor"><ellipse cx="8" cy="8" rx="4.5" ry="2.8" transform="rotate(-35 8 8)"/></svg>
+                8 Types
+              </span>
+              <span class="pc-stat alert">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2L1.5 14h13L8 2z"/><line x1="8" y1="9" x2="8" y2="11"/><circle cx="8" cy="12.5" r="0.5" fill="currentColor"/></svg>
+                1 Low stock
+              </span>
+            </div>
+          </div>
+          <div class="pc-btn-wrap">
+            <button class="pc-btn fill" onclick="selectPatient('p6','Arunee Pongthai','A - 102')">Fill</button>
+          </div>
+        </div>
+
+        <!-- Patient 7 — Pending -->
+        <div class="patient-card" onclick="selectPatient('p7','Tanapat Wongthong','A - 102')">
+          <div class="pc-inner">
+            <div class="pc-top-row">
+              <span class="pc-room-tag">A - 102</span>
+            </div>
+            <p class="pc-name">Tanapat<br>Wongthong</p>
+            <div class="pc-divider"></div>
+            <div class="pc-stats">
+              <span class="pc-stat">
+                <svg viewBox="0 0 16 16" fill="currentColor"><ellipse cx="8" cy="8" rx="4.5" ry="2.8" transform="rotate(-35 8 8)"/></svg>
+                8 Types
+              </span>
+              <span class="pc-stat alert">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2L1.5 14h13L8 2z"/><line x1="8" y1="9" x2="8" y2="11"/><circle cx="8" cy="12.5" r="0.5" fill="currentColor"/></svg>
+                1 Low stock
+              </span>
+            </div>
+          </div>
+          <div class="pc-btn-wrap">
+            <button class="pc-btn fill" onclick="selectPatient('p7','Tanapat Wongthong','A - 102')">Fill</button>
+          </div>
+        </div>
+
+        <!-- Patient 8 — Pending -->
+        <div class="patient-card" onclick="selectPatient('p8','Nipa Jankaew','A - 102')">
+          <div class="pc-inner">
+            <div class="pc-top-row">
+              <span class="pc-room-tag">A - 102</span>
+            </div>
+            <p class="pc-name">Nipa<br>Jankaew</p>
+            <div class="pc-divider"></div>
+            <div class="pc-stats">
+              <span class="pc-stat">
+                <svg viewBox="0 0 16 16" fill="currentColor"><ellipse cx="8" cy="8" rx="4.5" ry="2.8" transform="rotate(-35 8 8)"/></svg>
+                8 Types
+              </span>
+              <span class="pc-stat alert">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2L1.5 14h13L8 2z"/><line x1="8" y1="9" x2="8" y2="11"/><circle cx="8" cy="12.5" r="0.5" fill="currentColor"/></svg>
+                1 Low stock
+              </span>
+            </div>
+          </div>
+          <div class="pc-btn-wrap">
+            <button class="pc-btn fill" onclick="selectPatient('p8','Nipa Jankaew','A - 102')">Fill</button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script>
+    const wardName = sessionStorage.getItem('wardName') || 'Ward A';
+    document.getElementById('ward-label').textContent = wardName;
+
+    function selectPatient(id, name, room) {
+      sessionStorage.setItem('patientId',   id);
+      sessionStorage.setItem('patientName', name);
+      sessionStorage.setItem('roomNo',      room);
+      sessionStorage.removeItem('dispenseState');
+      window.location.href = 'loading.html';
+    }
+  </script>
+</body>
+</html>

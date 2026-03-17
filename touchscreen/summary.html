@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1024" />
+  <title>MedCare — จัดยาครบสัปดาห์</title>
+  <link rel="stylesheet" href="./base.css" />
+  <style>
+    .summary-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 24px;
+      text-align: center;
+      padding: 0 60px;
+    }
+
+    /* Celebration icon */
+    .summary-icon {
+      width: 100px;
+      height: 100px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-highlight);
+      display: grid;
+      place-items: center;
+      margin: 0 auto;
+    }
+
+    .summary-icon svg { width: 56px; height: 56px; }
+
+    /* Main heading */
+    .summary-heading {
+      margin: 0;
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.15;
+    }
+
+    .summary-heading .highlight { color: var(--color-primary); }
+
+    .summary-subheading {
+      margin: 6px 0 0;
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+
+    /* Stats row */
+    .summary-stats {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      align-items: stretch;
+    }
+
+    .summary-stat-card {
+      background: var(--bg-surface);
+      border: 0.8px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px 28px;
+      min-width: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .summary-stat-value {
+      font-size: 40px;
+      font-weight: 800;
+      color: var(--color-primary);
+      line-height: 1;
+    }
+
+    .summary-stat-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* Patient name badge */
+    .summary-patient-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-highlight);
+      border: 1px solid rgba(242,166,90,0.3);
+      border-radius: var(--radius-pill);
+      padding: 6px 16px 6px 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+
+    .summary-patient-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius-pill);
+      background: rgba(242,166,90,0.2);
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    /* Action buttons */
+    .summary-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .btn-back-patients {
+      min-width: 180px;
+    }
+
+    .btn-next-patient {
+      min-width: 200px;
+    }
+
+    /* Confetti decoration */
+    .confetti-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      font-size: 24px;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="touch-shell">
+
+    <!-- Header -->
+    <header class="touch-header">
+      <div class="header-left">
+        <button class="header-back" onclick="window.location.href='patient.html'" aria-label="กลับ">
+          <span class="header-back-icon">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 15L7 10l5-5"/>
+            </svg>
+          </span>
+          <span>Patients</span>
+        </button>
+      </div>
+
+      <div class="header-logo">
+        <svg class="logo-bubble-svg" viewBox="0 0 28 24" fill="none" aria-hidden="true">
+          <path d="M3 0h22a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H14l-5 5v-5H3a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3z" fill="#F2A65A"/>
+        </svg>
+        <span class="logo-wordmark">illo</span>
+      </div>
+
+      <div class="header-actions">
+        <button class="header-icon-btn" aria-label="หน้าหลัก" onclick="window.location.href='index.html'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+            <path d="M9 21V12h6v9"/>
+          </svg>
+        </button>
+        <button class="header-icon-btn" aria-label="ผู้ใช้">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </button>
+        <button class="header-icon-btn" aria-label="ตั้งค่า">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="touch-main">
+      <div class="summary-page">
+
+        <!-- Confetti row -->
+        <div class="confetti-row" aria-hidden="true">🎉 💊 ✅ 💊 🎉</div>
+
+        <!-- Icon -->
+        <div class="summary-icon">
+          <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="28" cy="28" r="24" fill="#FFF3E8"/>
+            <polyline points="16,28 23,36 40,18" stroke="#F2A65A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <!-- Heading -->
+        <div>
+          <h1 class="summary-heading">Weekly filled <span class="highlight">complete!</span></h1>
+          <p class="summary-subheading">จัดยาครบทั้งสัปดาห์เรียบร้อยแล้ว</p>
+        </div>
+
+        <!-- Patient badge -->
+        <div class="summary-patient-badge" id="summary-patient-badge">
+          <div class="summary-patient-avatar" id="summary-avatar">ส</div>
+          <span id="summary-patient-name">สมชาย ใจดี</span>
+          <span style="color:var(--text-muted);font-weight:400">·</span>
+          <span style="color:var(--text-muted);font-weight:400" id="summary-room">A-101</span>
+        </div>
+
+        <!-- Stats -->
+        <div class="summary-stats">
+          <div class="summary-stat-card">
+            <span class="summary-stat-value" id="stat-days">7</span>
+            <span class="summary-stat-label">Days Filled</span>
+          </div>
+          <div class="summary-stat-card">
+            <span class="summary-stat-value" id="stat-tabs">147</span>
+            <span class="summary-stat-label">Total Tabs</span>
+          </div>
+          <div class="summary-stat-card">
+            <span class="summary-stat-value" id="stat-types">8</span>
+            <span class="summary-stat-label">Types of Med</span>
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="summary-actions">
+          <button class="btn btn-ghost btn-back-patients" type="button" onclick="goBack()">
+            ← Back to patients
+          </button>
+          <button class="btn btn-primary btn-next-patient" type="button" onclick="nextPatient()">
+            Next patient →
+          </button>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script>
+    // Restore context
+    const patientName = sessionStorage.getItem('patientName') || 'สมชาย ใจดี';
+    const roomNo      = sessionStorage.getItem('roomNo')      || 'A-101';
+    document.getElementById('summary-patient-name').textContent = patientName;
+    document.getElementById('summary-room').textContent         = roomNo;
+    document.getElementById('summary-avatar').textContent       = patientName.charAt(0);
+
+    // Compute stats from dispense state
+    const dispState = JSON.parse(sessionStorage.getItem('dispenseState') || 'null');
+    if (dispState) {
+      const filledDays = dispState.filledDays.length;
+      document.getElementById('stat-days').textContent = filledDays || 7;
+    }
+
+    function goBack() {
+      // Clear dispense state for this patient, go back to patient list
+      sessionStorage.removeItem('dispenseState');
+      window.location.href = 'patient.html';
+    }
+
+    function nextPatient() {
+      // Clear dispense state, go pick the next patient
+      sessionStorage.removeItem('dispenseState');
+      sessionStorage.removeItem('patientId');
+      sessionStorage.removeItem('patientName');
+      sessionStorage.removeItem('roomNo');
+      window.location.href = 'patient.html';
+    }
+  </script>
+</body>
+</html>

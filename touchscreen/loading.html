@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1024" />
+  <title>MedCare — โหลดยาเข้าเครื่อง</title>
+  <link rel="stylesheet" href="./base.css" />
+  <style>
+    /* ── Med row — Figma 04_Add_To_Dispenser ────────────────────────────── */
+    .med-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-top: 4px;
+    }
+
+    .med-row {
+      background: var(--bg-surface);
+      border: 0.96px solid var(--border-color);
+      border-radius: 16.8px;
+      padding: 19px 20px 19px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 108px;
+      gap: 20px;
+    }
+
+    .med-row-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    .med-name-text {
+      font-size: 24px;
+      font-weight: 700;
+      color: #100f0d;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .med-dosage-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .med-dosage-text {
+      font-size: 16px;
+      color: #2e2e2e;
+      white-space: pre;
+    }
+
+    /* All meal chips are uniform orange — matches Figma */
+    .meal-chips { display: flex; gap: 11px; align-items: center; flex-wrap: wrap; }
+
+    .meal-chip {
+      height: 23px;
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      border: 0.9px solid var(--color-primary);
+      background: rgba(242,166,90,0.30);
+      font-size: 14px;
+      font-weight: 400;
+      color: #1a1a1a;
+      white-space: nowrap;
+      line-height: 1.2;
+    }
+
+    /* Qty block — right side */
+    .med-qty-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 80px;
+      flex-shrink: 0;
+    }
+
+    .med-qty-num {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--color-primary);
+      line-height: 1;
+    }
+
+    .med-qty-label {
+      font-size: 16px;
+      color: #2e2e2e;
+      white-space: nowrap;
+    }
+
+    /* Page heading */
+    .load-heading {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 14px;
+      padding-top: 4px;
+    }
+
+    /* Floating Start Dispense at bottom-right */
+    .start-btn-wrap {
+      position: absolute;
+      bottom: 20px;
+      right: var(--header-side);
+      z-index: 10;
+    }
+
+    .btn-start-dispense {
+      height: 40px;
+      width: 178px;
+      border-radius: var(--radius-pill);
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      background: var(--color-primary);
+      transition: background 0.15s, opacity 0.15s;
+    }
+
+    .btn-start-dispense:disabled {
+      background: #ddd;
+      cursor: default;
+    }
+  </style>
+</head>
+<body>
+  <div class="touch-shell">
+
+    <!-- Header — back label = patient name -->
+    <header class="touch-header">
+      <div class="header-left">
+        <button class="header-back" onclick="window.location.href='patient.html'" aria-label="กลับ">
+          <span class="header-back-icon">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 15L7 10l5-5"/>
+            </svg>
+          </span>
+          <span id="back-label">Somchai</span>
+        </button>
+      </div>
+
+      <div class="header-logo">
+        <svg class="logo-bubble-svg" viewBox="0 0 28 24" fill="none" aria-hidden="true">
+          <path d="M3 0h22a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H14l-5 5v-5H3a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3z" fill="#F2A65A"/>
+        </svg>
+        <span class="logo-wordmark">illo</span>
+      </div>
+
+      <div class="header-actions">
+        <button class="header-icon-btn" aria-label="หน้าหลัก" onclick="window.location.href='index.html'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+            <path d="M9 21V12h6v9"/>
+          </svg>
+        </button>
+        <button class="header-icon-btn" aria-label="ผู้ใช้">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </button>
+        <button class="header-icon-btn" aria-label="ตั้งค่า">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main: flat med list (no checkboxes) -->
+    <main class="touch-main" style="padding-bottom: 70px;">
+      <h1 class="load-heading">Load medications into machine</h1>
+
+      <div class="med-list">
+
+        <div class="med-row">
+          <div class="med-row-left">
+            <p class="med-name-text">Risperidone 2mg</p>
+            <div class="med-dosage-row">
+              <span class="med-dosage-text">½ tab</span>
+              <div class="meal-chips">
+                <span class="meal-chip">Pre-AM</span>
+                <span class="meal-chip">PM</span>
+              </div>
+            </div>
+          </div>
+          <div class="med-qty-block">
+            <span class="med-qty-num">14</span>
+            <span class="med-qty-label">tab / week</span>
+          </div>
+        </div>
+
+        <div class="med-row">
+          <div class="med-row-left">
+            <p class="med-name-text">Omeprazole 20mg</p>
+            <div class="med-dosage-row">
+              <span class="med-dosage-text">1 tab</span>
+              <div class="meal-chips">
+                <span class="meal-chip">Post-AM</span>
+                <span class="meal-chip">PM</span>
+                <span class="meal-chip">Bedtime</span>
+              </div>
+            </div>
+          </div>
+          <div class="med-qty-block">
+            <span class="med-qty-num">7</span>
+            <span class="med-qty-label">tab / week</span>
+          </div>
+        </div>
+
+        <div class="med-row">
+          <div class="med-row-left">
+            <p class="med-name-text">Metformin 500mg</p>
+            <div class="med-dosage-row">
+              <span class="med-dosage-text">1 tab</span>
+              <div class="meal-chips">
+                <span class="meal-chip">Pre-AM</span>
+                <span class="meal-chip">Post-AM</span>
+                <span class="meal-chip">PM</span>
+                <span class="meal-chip">Bedtime</span>
+              </div>
+            </div>
+          </div>
+          <div class="med-qty-block">
+            <span class="med-qty-num">4</span>
+            <span class="med-qty-label">tab / week</span>
+          </div>
+        </div>
+
+        <div class="med-row">
+          <div class="med-row-left">
+            <p class="med-name-text">Amlodipine 5mg</p>
+            <div class="med-dosage-row">
+              <span class="med-dosage-text">1 tab</span>
+              <div class="meal-chips">
+                <span class="meal-chip">Post-AM</span>
+              </div>
+            </div>
+          </div>
+          <div class="med-qty-block">
+            <span class="med-qty-num">7</span>
+            <span class="med-qty-label">tab / week</span>
+          </div>
+        </div>
+
+        <div class="med-row">
+          <div class="med-row-left">
+            <p class="med-name-text">Atorvastatin 20mg</p>
+            <div class="med-dosage-row">
+              <span class="med-dosage-text">1 tab</span>
+              <div class="meal-chips">
+                <span class="meal-chip">Bedtime</span>
+              </div>
+            </div>
+          </div>
+          <div class="med-qty-block">
+            <span class="med-qty-num">7</span>
+            <span class="med-qty-label">tab / week</span>
+          </div>
+        </div>
+
+        <div class="med-row">
+          <div class="med-row-left">
+            <p class="med-name-text">Aspirin 81mg</p>
+            <div class="med-dosage-row">
+              <span class="med-dosage-text">1 tab</span>
+              <div class="meal-chips">
+                <span class="meal-chip">Post-AM</span>
+              </div>
+            </div>
+          </div>
+          <div class="med-qty-block">
+            <span class="med-qty-num">7</span>
+            <span class="med-qty-label">tab / week</span>
+          </div>
+        </div>
+
+        <div class="med-row">
+          <div class="med-row-left">
+            <p class="med-name-text">Furosemide 40mg</p>
+            <div class="med-dosage-row">
+              <span class="med-dosage-text">½ tab</span>
+              <div class="meal-chips">
+                <span class="meal-chip">Post-AM</span>
+                <span class="meal-chip">PM</span>
+              </div>
+            </div>
+          </div>
+          <div class="med-qty-block">
+            <span class="med-qty-num">4</span>
+            <span class="med-qty-label">tab / week</span>
+          </div>
+        </div>
+
+        <div class="med-row">
+          <div class="med-row-left">
+            <p class="med-name-text">Lisinopril 10mg</p>
+            <div class="med-dosage-row">
+              <span class="med-dosage-text">1 tab</span>
+              <div class="meal-chips">
+                <span class="meal-chip">Post-AM</span>
+              </div>
+            </div>
+          </div>
+          <div class="med-qty-block">
+            <span class="med-qty-num">7</span>
+            <span class="med-qty-label">tab / week</span>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Floating start button (bottom-right, no full footer bar) -->
+    <div class="start-btn-wrap">
+      <button class="btn-start-dispense" type="button" onclick="startDispense()">
+        Start Dispense
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    const patientName = sessionStorage.getItem('patientName') || 'Somchai';
+    // Show first name only in back label
+    const firstName = patientName.split(' ')[0];
+    document.getElementById('back-label').textContent = firstName;
+
+    function startDispense() {
+      window.location.href = 'dispense.html';
+    }
+  </script>
+</body>
+</html>

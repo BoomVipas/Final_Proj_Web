@@ -1,0 +1,18 @@
+{
+  "name": "final_project_web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "screenshot": "node scripts/screenshots/capture.js",
+    "screenshot:quick": "node scripts/screenshots/quick.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "puppeteer": "^24.39.1"
+  }
+}

@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1024" />
+  <title>MedCare — จ่ายยา</title>
+  <link rel="stylesheet" href="./base.css" />
+  <style>
+    /* ── Day heading ────────────────────────────────────────────────────── */
+    .day-heading-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 0 16px;
+      position: relative;
+    }
+
+    .day-heading {
+      font-size: 32px;
+      font-weight: 700;
+      text-align: center;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .day-heading .day-name  { color: var(--color-primary); }
+    .day-heading .day-date  { color: var(--text-primary); }
+
+    .day-next-btn {
+      position: absolute;
+      right: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .day-next-btn:hover { background: var(--bg-muted); }
+    .day-next-btn svg { width: 18px; height: 18px; }
+
+    /* ── 3-column grid ──────────────────────────────────────────────────── */
+    .dispense-columns {
+      display: grid;
+      grid-template-columns: repeat(3, 264px);
+      gap: 20px;
+      justify-content: center;
+    }
+
+    /* Column card */
+    .dcol {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 396px;
+    }
+
+    .dcol.active  { border-color: var(--color-primary); border-width: 1.5px; }
+    .dcol.filled  { background: rgba(22,163,74,0.03); border-color: rgba(22,163,74,0.25); }
+    .dcol.waiting { opacity: 0.6; }
+
+    /* Pill-shaped header tag — white bg, grey border, icon + label */
+    .dcol-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg-surface);
+      border: 0.75px solid #E6E6E6;
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 16px;
+      font-weight: 400;
+      color: #1a1a1a;
+      width: fit-content;
+    }
+
+    .dcol-tag svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    /* Time label — 24px orange bold */
+    .dcol-time {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    /* Divider */
+    .dcol-divider { height: 1px; background: var(--border-color); }
+
+    /* Med items */
+    .dcol-meds {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .dcol-med-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .dcol-med-name {
+      font-size: 16px;
+      color: var(--text-primary);
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .dcol-med-dose {
+      font-size: 14px;
+      color: #6b7280;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .dcol-med-icon {
+      flex-shrink: 0;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .dcol-med-icon svg { width: 16px; height: 16px; }
+
+    /* Action at bottom */
+    .dcol-action { margin-top: auto; padding-top: 8px; }
+
+    /* Slide to Dispense — orange pill button */
+    .slide-btn {
+      width: 100%;
+      height: 40px;
+      border-radius: var(--radius-pill);
+      background: var(--color-primary);
+      border: none;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 400;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .slide-btn:hover  { background: var(--color-primary-dark); }
+    .slide-btn:active { transform: scale(0.97); }
+    .slide-btn svg { width: 22px; height: 22px; }
+
+    /* Medication filled — green text */
+    .filled-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #66cba4;
+    }
+    .filled-label svg { width: 19px; height: 19px; }
+
+    /* Coming Soon — white pill button */
+    .coming-soon-btn {
+      width: 100%;
+      height: 40px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-surface);
+      border: 1.2px solid #E6E6E6;
+      color: var(--text-primary);
+      font-size: 20px;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: default;
+    }
+  </style>
+</head>
+<body>
+  <div class="touch-shell">
+
+    <!-- Header — back = day name -->
+    <header class="touch-header">
+      <div class="header-left">
+        <button class="header-back" onclick="window.location.href='loading.html'" aria-label="กลับ">
+          <span class="header-back-icon">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 15L7 10l5-5"/>
+            </svg>
+          </span>
+          <span id="back-day">Monday</span>
+        </button>
+      </div>
+
+      <div class="header-logo">
+        <svg class="logo-bubble-svg" viewBox="0 0 28 24" fill="none" aria-hidden="true">
+          <path d="M3 0h22a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H14l-5 5v-5H3a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3z" fill="#F2A65A"/>
+        </svg>
+        <span class="logo-wordmark">illo</span>
+      </div>
+
+      <div class="header-actions">
+        <button class="header-icon-btn" aria-label="หน้าหลัก" onclick="window.location.href='index.html'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/>
+          </svg>
+        </button>
+        <button class="header-icon-btn" aria-label="ผู้ใช้">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </button>
+        <button class="header-icon-btn" aria-label="ตั้งค่า">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="touch-main" style="padding-top: 4px;">
+
+      <!-- Day heading + next arrow -->
+      <div class="day-heading-row">
+        <h1 class="day-heading" id="day-heading">
+          <span class="day-name" id="day-name-span">Monday</span>,
+          <span class="day-date" id="day-date-span">Feb 9, 2026</span>
+        </h1>
+        <button class="day-next-btn" onclick="nextDay()" aria-label="วันถัดไป">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- 3 dispense columns -->
+      <div class="dispense-columns" id="dispense-columns"></div>
+
+    </main>
+  </div>
+
+  <script>
+    const DAYS  = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+    const BASE  = new Date('2026-02-09');
+
+    function dayDate(i) {
+      const d = new Date(BASE); d.setDate(d.getDate() + i);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    const dispStateKey = 'dispenseState';
+    let state = JSON.parse(sessionStorage.getItem(dispStateKey) || 'null') || {
+      currentDay: 0, filledDays: [], filledMeals: {}
+    };
+
+    const MEALS = [
+      {
+        key: 'morning', label: 'Morning Pills', time: '08:00 AM',
+        iconSvg: `<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="9" r="3"/>
+          <line x1="9" y1="1" x2="9" y2="3"/><line x1="9" y1="15" x2="9" y2="17"/>
+          <line x1="1" y1="9" x2="3" y2="9"/><line x1="15" y1="9" x2="17" y2="9"/>
+          <line x1="3.2" y1="3.2" x2="4.6" y2="4.6"/><line x1="13.4" y1="13.4" x2="14.8" y2="14.8"/>
+          <line x1="3.2" y1="14.8" x2="4.6" y2="13.4"/><line x1="13.4" y1="4.6" x2="14.8" y2="3.2"/>
+        </svg>`,
+        meds: [
+          { name: 'Paracetamol 500mg', dose: '1 pill' },
+          { name: 'Aspirin 81mg',       dose: '1 pill' },
+          { name: 'Vitamin B Complex',  dose: '2 pills' }
+        ]
+      },
+      {
+        key: 'afternoon', label: 'Afternoon Pills', time: '12:00 PM',
+        iconSvg: `<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 10h16"/><path d="M4 14c2-3 4-5 5-5s3 2 5 5"/>
+          <circle cx="14" cy="5" r="2.5"/>
+        </svg>`,
+        meds: [
+          { name: 'Atorvastatin 10mg',  dose: '1 pill' },
+          { name: 'Metformin 500mg',    dose: '1 pill' }
+        ]
+      },
+      {
+        key: 'evening', label: 'Evening Pills', time: '06:00 PM',
+        iconSvg: `<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 10a6 6 0 1 1-9.5-4.9A7 7 0 0 0 14 10z"/>
+          <circle cx="13" cy="4" r="0.8" fill="currentColor"/>
+          <circle cx="15" cy="7" r="0.6" fill="currentColor"/>
+        </svg>`,
+        meds: [
+          { name: 'Atorvastatin 10mg',  dose: '1 pill' },
+          { name: 'Metformin 500mg',    dose: '1 pill' }
+        ]
+      }
+    ];
+
+    const PILL_ICON = `<svg viewBox="0 0 18 18" fill="currentColor"><ellipse cx="9" cy="9" rx="5" ry="3" transform="rotate(-35 9 9)"/></svg>`;
+
+    function saveState() { sessionStorage.setItem(dispStateKey, JSON.stringify(state)); }
+
+    function renderHeading() {
+      const i = state.currentDay;
+      document.getElementById('day-name-span').textContent = DAYS[i];
+      document.getElementById('day-date-span').textContent = dayDate(i);
+      document.getElementById('back-day').textContent = DAYS[i];
+    }
+
+    function renderColumns() {
+      const day = state.currentDay;
+      const cols = document.getElementById('dispense-columns');
+      cols.innerHTML = '';
+
+      MEALS.forEach((meal, mi) => {
+        const mealKey  = `${day}-${meal.key}`;
+        const isFilled = !!state.filledMeals[mealKey];
+        const isActive = !isFilled && MEALS.slice(0, mi).every(m => !!state.filledMeals[`${day}-${m.key}`]);
+
+        const col = document.createElement('div');
+        col.className = 'dcol' + (isFilled ? ' filled' : isActive ? ' active' : ' waiting');
+
+        // Tag
+        const tag = document.createElement('div');
+        tag.className = 'dcol-tag';
+        tag.innerHTML = meal.iconSvg + `<span>${meal.label}</span>`;
+        col.appendChild(tag);
+
+        // Time
+        const time = document.createElement('p');
+        time.className = 'dcol-time';
+        time.textContent = meal.time;
+        col.appendChild(time);
+
+        // Divider
+        const div = document.createElement('div');
+        div.className = 'dcol-divider';
+        col.appendChild(div);
+
+        // Med list
+        const medList = document.createElement('div');
+        medList.className = 'dcol-meds';
+        meal.meds.forEach(med => {
+          const item = document.createElement('div');
+          item.className = 'dcol-med-item';
+          item.innerHTML = `
+            <div>
+              <p class="dcol-med-name">${med.name}</p>
+              <p class="dcol-med-dose">${med.dose}</p>
+            </div>
+            <span class="dcol-med-icon">${PILL_ICON}</span>`;
+          medList.appendChild(item);
+        });
+        col.appendChild(medList);
+
+        // Action
+        const action = document.createElement('div');
+        action.className = 'dcol-action';
+
+        if (isFilled) {
+          action.innerHTML = `
+            <div class="filled-label">
+              <svg viewBox="0 0 20 20" fill="none" stroke="#66cba4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="10" r="8"/>
+                <polyline points="6.5,10 8.5,12.5 14,7"/>
+              </svg>
+              Medication filled
+            </div>`;
+        } else if (isActive) {
+          const btn = document.createElement('button');
+          btn.className = 'slide-btn';
+          btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9l3 3-3 3"/></svg> Slide to Dispense`;
+          btn.onclick = () => dispense(day, meal.key);
+          action.appendChild(btn);
+        } else {
+          action.innerHTML = `<div class="coming-soon-btn">Coming Soon</div>`;
+        }
+
+        col.appendChild(action);
+        cols.appendChild(col);
+      });
+    }
+
+    function dispense(day, mealKey) {
+      state.filledMeals[`${day}-${mealKey}`] = true;
+      const allDone = MEALS.every(m => !!state.filledMeals[`${day}-${m.key}`]);
+      if (allDone) {
+        if (!state.filledDays.includes(day)) state.filledDays.push(day);
+        const next = DAYS.findIndex((_, i) => !state.filledDays.includes(i));
+        if (next === -1) { saveState(); window.location.href = 'summary.html'; return; }
+        state.currentDay = next;
+      }
+      saveState(); renderAll();
+    }
+
+    function nextDay() {
+      state.currentDay = (state.currentDay + 1) % 7;
+      saveState(); renderAll();
+    }
+
+    function renderAll() { renderHeading(); renderColumns(); }
+    renderAll();
+  </script>
+</body>
+</html>

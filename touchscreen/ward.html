@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1024" />
+  <title>MedCare — เลือกวอร์ด</title>
+  <link rel="stylesheet" href="./base.css" />
+</head>
+<body>
+  <div class="touch-shell">
+
+    <!-- Header -->
+    <header class="touch-header">
+      <div class="header-left">
+        <button class="header-back" onclick="window.location.href='index.html'" aria-label="กลับ">
+          <span class="header-back-icon">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 15L7 10l5-5"/>
+            </svg>
+          </span>
+          <span>Ward</span>
+        </button>
+      </div>
+
+      <div class="header-logo">
+        <svg class="logo-bubble-svg" viewBox="0 0 28 24" fill="none" aria-hidden="true">
+          <path d="M3 0h22a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H14l-5 5v-5H3a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3z" fill="#F2A65A"/>
+        </svg>
+        <span class="logo-wordmark">illo</span>
+      </div>
+
+      <div class="header-actions">
+        <button class="header-icon-btn" aria-label="หน้าหลัก" onclick="window.location.href='index.html'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+            <path d="M9 21V12h6v9"/>
+          </svg>
+        </button>
+        <button class="header-icon-btn" aria-label="ผู้ใช้">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </button>
+        <button class="header-icon-btn" aria-label="ตั้งค่า">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main: Ward grid -->
+    <main class="touch-main">
+      <div class="ward-grid" id="ward-grid">
+
+        <!-- Ward A -->
+        <button class="ward-card" onclick="selectWard('ward-a', 'Ward A')" data-ward-id="ward-a">
+          <span class="ward-card-menu" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+              <circle cx="9" cy="4" r="1.5"/><circle cx="9" cy="9" r="1.5"/><circle cx="9" cy="14" r="1.5"/>
+            </svg>
+          </span>
+          <p class="ward-card-name">Ward A</p>
+          <p class="ward-card-meta">Floor 1, Room 101–120 · caregiver: คุณเมย์</p>
+          <div class="ward-card-divider"></div>
+          <div class="ward-card-stats">
+            <div class="ward-stat">
+              <!-- Users icon -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              <span>6 Patients</span>
+            </div>
+            <div class="ward-stat done">
+              <!-- Check circle -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-5"/>
+              </svg>
+              <span>6/6 Filled</span>
+            </div>
+            <div class="ward-stat alert">
+              <!-- Bell icon -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+              <span>2 Low stock</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- Ward B -->
+        <button class="ward-card" onclick="selectWard('ward-b', 'Ward B')" data-ward-id="ward-b">
+          <span class="ward-card-menu" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+              <circle cx="9" cy="4" r="1.5"/><circle cx="9" cy="9" r="1.5"/><circle cx="9" cy="14" r="1.5"/>
+            </svg>
+          </span>
+          <p class="ward-card-name">Ward B</p>
+          <p class="ward-card-meta">Floor 1, Room 121–140 · caregiver: คุณนุ่น</p>
+          <div class="ward-card-divider"></div>
+          <div class="ward-card-stats">
+            <div class="ward-stat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              <span>8 Patients</span>
+            </div>
+            <div class="ward-stat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-5"/>
+              </svg>
+              <span>0/8 Filled</span>
+            </div>
+            <div class="ward-stat alert">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+              <span>2 Low stock</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- Ward C -->
+        <button class="ward-card" onclick="selectWard('ward-c', 'Ward C')" data-ward-id="ward-c">
+          <span class="ward-card-menu" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+              <circle cx="9" cy="4" r="1.5"/><circle cx="9" cy="9" r="1.5"/><circle cx="9" cy="14" r="1.5"/>
+            </svg>
+          </span>
+          <p class="ward-card-name">Ward C</p>
+          <p class="ward-card-meta">Floor 2, Room 201–218 · caregiver: คุณจ๋า</p>
+          <div class="ward-card-divider"></div>
+          <div class="ward-card-stats">
+            <div class="ward-stat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              <span>5 Patients</span>
+            </div>
+            <div class="ward-stat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-5"/>
+              </svg>
+              <span>0/5 Filled</span>
+            </div>
+            <div class="ward-stat alert">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+              <span>2 Low stock</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- Ward D -->
+        <button class="ward-card" onclick="selectWard('ward-d', 'Ward D')" data-ward-id="ward-d">
+          <span class="ward-card-menu" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+              <circle cx="9" cy="4" r="1.5"/><circle cx="9" cy="9" r="1.5"/><circle cx="9" cy="14" r="1.5"/>
+            </svg>
+          </span>
+          <p class="ward-card-name">Ward D</p>
+          <p class="ward-card-meta">Floor 2, Room 219–240 · caregiver: คุณบิ๋ม</p>
+          <div class="ward-card-divider"></div>
+          <div class="ward-card-stats">
+            <div class="ward-stat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              <span>7 Patients</span>
+            </div>
+            <div class="ward-stat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-5"/>
+              </svg>
+              <span>0/7 Filled</span>
+            </div>
+            <div class="ward-stat alert">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+              <span>2 Low stock</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- Ward E -->
+        <button class="ward-card" onclick="selectWard('ward-e', 'Ward E')" data-ward-id="ward-e">
+          <span class="ward-card-menu" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+              <circle cx="9" cy="4" r="1.5"/><circle cx="9" cy="9" r="1.5"/><circle cx="9" cy="14" r="1.5"/>
+            </svg>
+          </span>
+          <p class="ward-card-name">Ward E</p>
+          <p class="ward-card-meta">Floor 3, Room 301–315 · caregiver: คุณแป้ง</p>
+          <div class="ward-card-divider"></div>
+          <div class="ward-card-stats">
+            <div class="ward-stat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              <span>6 Patients</span>
+            </div>
+            <div class="ward-stat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-5"/>
+              </svg>
+              <span>0/6 Filled</span>
+            </div>
+            <div class="ward-stat alert">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+              <span>2 Low stock</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- Ward F -->
+        <button class="ward-card" onclick="selectWard('ward-f', 'Ward F')" data-ward-id="ward-f">
+          <span class="ward-card-menu" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+              <circle cx="9" cy="4" r="1.5"/><circle cx="9" cy="9" r="1.5"/><circle cx="9" cy="14" r="1.5"/>
+            </svg>
+          </span>
+          <p class="ward-card-name">Ward F</p>
+          <p class="ward-card-meta">Floor 3, Room 316–330 · caregiver: คุณอ้อ</p>
+          <div class="ward-card-divider"></div>
+          <div class="ward-card-stats">
+            <div class="ward-stat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              <span>6 Patients</span>
+            </div>
+            <div class="ward-stat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-5"/>
+              </svg>
+              <span>0/6 Filled</span>
+            </div>
+            <div class="ward-stat alert">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+              <span>2 Low stock</span>
+            </div>
+          </div>
+        </button>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script>
+    function selectWard(wardId, wardName) {
+      sessionStorage.setItem('selectedWardId', wardId);
+      sessionStorage.setItem('selectedWardName', wardName);
+      window.location.href = 'patient.html';
+    }
+  </script>
+</body>
+</html>
