@@ -55,57 +55,7 @@
         <!-- Remedy Cabinet → web app -->
         <button class="home-card" onclick="window.open('/web', '_blank')" type="button" aria-label="Remedy Cabinet — จัดการตู้ยา">
           <div class="home-card-illustration">
-            <!-- Medicine cabinet — isometric illustration -->
-            <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
-              <!-- Left/depth face -->
-              <polygon points="90,155 71,166 71,82 90,71" fill="#FFF0DC" stroke="#F2A65A" stroke-width="1.5"/>
-              <!-- Front/right face -->
-              <polygon points="90,155 135,181 135,97 90,71" fill="#FFFAF5" stroke="#F2A65A" stroke-width="1.5"/>
-              <!-- Top face -->
-              <polygon points="90,71 71,82 116,108 135,97" fill="#FFE8C8" stroke="#F2A65A" stroke-width="1.5"/>
-
-              <!-- Shelf 1 lines (h=28 from floor) -->
-              <line x1="90" y1="127" x2="135" y2="153" stroke="#F2A65A" stroke-width="1.1" opacity="0.65"/>
-              <line x1="71" y1="138" x2="90" y2="127" stroke="#F2A65A" stroke-width="1.1" opacity="0.65"/>
-              <!-- Shelf 2 lines (h=56) -->
-              <line x1="90" y1="99" x2="135" y2="125" stroke="#F2A65A" stroke-width="1.1" opacity="0.65"/>
-              <line x1="71" y1="110" x2="90" y2="99" stroke="#F2A65A" stroke-width="1.1" opacity="0.65"/>
-
-              <!-- Shelf surface fills (subtle) -->
-              <polygon points="90,127 135,153 116,162 71,138" fill="#F2A65A" opacity="0.12"/>
-              <polygon points="90,99 135,125 116,134 71,110" fill="#F2A65A" opacity="0.12"/>
-
-              <!-- Level 1 bottles (on floor, p≈0.2,0.5,0.8) -->
-              <rect x="96" y="142" width="7" height="18" rx="1.5" fill="#F2A65A" opacity="0.80"/>
-              <rect x="96" y="138" width="7" height="5"  rx="1"   fill="#C87030"/>
-              <rect x="109" y="150" width="7" height="18" rx="1.5" fill="#F2A65A" opacity="0.80"/>
-              <rect x="109" y="146" width="7" height="5"  rx="1"   fill="#C87030"/>
-              <rect x="123" y="158" width="7" height="18" rx="1.5" fill="#F2A65A" opacity="0.80"/>
-              <rect x="123" y="154" width="7" height="5"  rx="1"   fill="#C87030"/>
-
-              <!-- Level 2 bottles (on shelf 1) -->
-              <rect x="96"  y="114" width="7" height="18" rx="1.5" fill="#F2A65A" opacity="0.70"/>
-              <rect x="96"  y="110" width="7" height="5"  rx="1"   fill="#C87030"/>
-              <rect x="109" y="122" width="7" height="18" rx="1.5" fill="#F2A65A" opacity="0.70"/>
-              <rect x="109" y="118" width="7" height="5"  rx="1"   fill="#C87030"/>
-              <rect x="123" y="130" width="7" height="18" rx="1.5" fill="#F2A65A" opacity="0.70"/>
-              <rect x="123" y="126" width="7" height="5"  rx="1"   fill="#C87030"/>
-
-              <!-- Level 3 bottles (on shelf 2) -->
-              <rect x="96"  y="86"  width="7" height="18" rx="1.5" fill="#F2A65A" opacity="0.60"/>
-              <rect x="96"  y="82"  width="7" height="5"  rx="1"   fill="#C87030"/>
-              <rect x="109" y="94"  width="7" height="18" rx="1.5" fill="#F2A65A" opacity="0.60"/>
-              <rect x="109" y="90"  width="7" height="5"  rx="1"   fill="#C87030"/>
-              <rect x="123" y="102" width="7" height="18" rx="1.5" fill="#F2A65A" opacity="0.60"/>
-              <rect x="123" y="98"  width="7" height="5"  rx="1"   fill="#C87030"/>
-
-              <!-- Front vertical spine -->
-              <line x1="90" y1="71" x2="90" y2="155" stroke="#F2A65A" stroke-width="2.5" stroke-linecap="round"/>
-
-              <!-- Sparkles -->
-              <path d="M154 52 l2.5 6.5 6.5 2.5 -6.5 2.5 -2.5 6.5 -2.5 -6.5 -6.5 -2.5 6.5 -2.5z" fill="#F2A65A"/>
-              <path d="M142 37 l1.5 4 4 1.5 -4 1.5 -1.5 4 -1.5 -4 -4 -1.5 4 -1.5z" fill="#F2A65A" opacity="0.6"/>
-            </svg>
+            <img src="./Remedy_Cabinet.svg" alt="Remedy Cabinet" draggable="false"/>
           </div>
           <p class="home-card-title">Remedy Cabinet</p>
           <p class="home-card-subtitle">Manage Medicine Cabinet</p>
@@ -114,49 +64,7 @@
         <!-- Pill Dispenser → touchscreen workflow -->
         <button class="home-card" onclick="window.location.href='ward.html'" type="button" aria-label="Pill Dispenser — จ่ายยาตามตาราง">
           <div class="home-card-illustration">
-            <!-- Pill dispenser — isometric blister pack + capsule -->
-            <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
-              <!-- Left/depth face -->
-              <polygon points="96,165 80,174 80,96 96,87" fill="#FFF0DC" stroke="#F2A65A" stroke-width="1.5"/>
-              <!-- Front face -->
-              <polygon points="96,165 141,191 141,113 96,87" fill="#FFFAF5" stroke="#F2A65A" stroke-width="1.5"/>
-              <!-- Top face -->
-              <polygon points="96,87 80,96 125,122 141,113" fill="#FFE8C8" stroke="#F2A65A" stroke-width="1.5"/>
-
-              <!-- 3×3 pill circles on front face -->
-              <!-- Row bottom (v=0.12) -->
-              <circle cx="105"   cy="158" r="7" fill="#FFF3E8" stroke="#F2A65A" stroke-width="1.2"/>
-              <circle cx="118.5" cy="165" r="7" fill="#FFF3E8" stroke="#F2A65A" stroke-width="1.2"/>
-              <circle cx="132"   cy="173" r="7" fill="#FFF3E8" stroke="#F2A65A" stroke-width="1.2"/>
-              <!-- Row middle (v=0.50) -->
-              <circle cx="105"   cy="131" r="7" fill="#FFF3E8" stroke="#F2A65A" stroke-width="1.2"/>
-              <circle cx="118.5" cy="139" r="7" fill="#FFF3E8" stroke="#F2A65A" stroke-width="1.2"/>
-              <circle cx="132"   cy="147" r="7" fill="#FFF3E8" stroke="#F2A65A" stroke-width="1.2"/>
-              <!-- Row top (v=0.87) -->
-              <circle cx="105"   cy="104" r="7" fill="#FFF3E8" stroke="#F2A65A" stroke-width="1.2"/>
-              <circle cx="118.5" cy="112" r="7" fill="#FFF3E8" stroke="#F2A65A" stroke-width="1.2"/>
-              <circle cx="132"   cy="120" r="7" fill="#FFF3E8" stroke="#F2A65A" stroke-width="1.2"/>
-
-              <!-- Pill capsule overlapping bottom-left, rotated −25° -->
-              <g transform="rotate(-25, 70, 148)">
-                <!-- Orange half -->
-                <rect x="44" y="135" width="26" height="26" fill="#F2A65A"/>
-                <circle cx="44" cy="148" r="13" fill="#F2A65A"/>
-                <!-- Dark half -->
-                <rect x="70" y="135" width="26" height="26" fill="#2C1A0E"/>
-                <circle cx="96" cy="148" r="13" fill="#2C1A0E"/>
-                <!-- Seam highlight -->
-                <line x1="70" y1="135" x2="70" y2="161" stroke="rgba(255,255,255,0.35)" stroke-width="2"/>
-              </g>
-
-              <!-- Front vertical spine -->
-              <line x1="96" y1="87" x2="96" y2="165" stroke="#F2A65A" stroke-width="2.5" stroke-linecap="round"/>
-
-              <!-- Sparkles -->
-              <path d="M154 52 l2.5 6.5 6.5 2.5 -6.5 2.5 -2.5 6.5 -2.5 -6.5 -6.5 -2.5 6.5 -2.5z" fill="#F2A65A"/>
-              <path d="M168 30 l1.5 4 4 1.5 -4 1.5 -1.5 4 -1.5 -4 -4 -1.5 4 -1.5z" fill="#F2A65A" opacity="0.65"/>
-              <path d="M140 37 l1 3 3 1 -3 1 -1 3 -1 -3 -3 -1 3 -1z" fill="#F2A65A" opacity="0.50"/>
-            </svg>
+            <img src="./Pill_Dispenser.svg" alt="Pill Dispenser" draggable="false"/>
           </div>
           <p class="home-card-title">Pill Dispenser</p>
           <p class="home-card-subtitle">Get Scheduled Medication</p>
