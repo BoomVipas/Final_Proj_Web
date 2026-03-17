@@ -195,25 +195,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 
 /* Pillo logo */
-.logo-bubble-svg {
-  width: 26px;
-  height: 23px;
+.logo-img {
+  height: 28px;
+  width: auto;
+  display: block;
   flex-shrink: 0;
-}
-
-.logo-wordmark {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.5px;
-}
-
-/* Legacy fallback */
-.logo-text {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--color-primary);
-  letter-spacing: -0.5px;
 }
 
 .header-actions {
